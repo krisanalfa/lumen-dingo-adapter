@@ -1,0 +1,30 @@
+{
+    "name": "krisanalfa/lumen-dingo-adapter",
+    "description": "Using Dingo + JWT in your Lumen Based Application with no pain",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Zeek\\LumenDingoAdapter\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "require": {
+        "php": ">=5.5.9",
+        "illuminate/hashing": "^5.3",
+        "tymon/jwt-auth": "0.5.*",
+        "illuminate/cookie": "^5.3",
+        "illuminate/routing": "^5.3",
+        "dingo/api": "1.0.x@dev"
+    },
+    "authors": [
+        {
+            "name": "Krisan Alfa Timur",
+            "email": "krisan47@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-dist": true
+}
