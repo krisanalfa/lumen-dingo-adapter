@@ -35,8 +35,21 @@ class LumenDingoAdapterServiceProvider extends ServiceProvider
         $this->app->register(DingoJWTDriverServiceProvider::class);
     }
 
+    /**
+     * Configure provider.
+     *
+     * @param string $name
+     *
+     * @return void
+     */
     protected function configure($name)
     {
-        $this->app->make('config')->set($name, require dirname(__DIR__) . "/config/{$name}.php");
+        $path = $this->app->basePath("config/{$name}.php");
+
+        if (!is_readable($path)) {
+            $path = dirname(__DIR__) . "/config/{$name}.php";
+        }
+
+        $this->app->make('config')->set($name, require $path);
     }
 }
