@@ -80,7 +80,7 @@ class LumenJWTServiceProvider extends ServiceProvider
     protected function registerSessionManager()
     {
         $this->loadComponent(
-            [SessionManager::class => 'session'],
+            SessionManager::class,
             'SessionManager'
         );
     }
@@ -88,7 +88,7 @@ class LumenJWTServiceProvider extends ServiceProvider
     protected function registerSessionStore()
     {
         $this->loadComponent(
-            [Store::class => 'session.store'],
+            Store::class,
             'SessionStore'
         );
     }
@@ -130,7 +130,7 @@ class LumenJWTServiceProvider extends ServiceProvider
     protected function registerCookieComponent()
     {
         $this->loadComponent(
-            [CookieJar::class => 'cookie'],
+            CookieJar::class,
             'CookieJar'
         );
     }
@@ -163,7 +163,7 @@ class LumenJWTServiceProvider extends ServiceProvider
     protected function registerCacheManager()
     {
         $this->loadComponent(
-            [CacheManager::class => 'cache'],
+            CacheManager::class,
             'CacheManager'
         );
     }
@@ -174,7 +174,7 @@ class LumenJWTServiceProvider extends ServiceProvider
     protected function registerMemcachedConnector()
     {
         $this->loadComponent(
-            [MemcachedConnector::class => 'memcached.connector'],
+            MemcachedConnector::class,
             'MemcachedConnector'
         );
     }
@@ -239,7 +239,7 @@ class LumenJWTServiceProvider extends ServiceProvider
     protected function registerBaseJWTAuth()
     {
         $this->loadComponent(
-            [TymonJWTAuth::class => 'tymon.jwt.auth'],
+            TymonJWTAuth::class,
             'JWTAuth'
         );
     }
@@ -250,7 +250,7 @@ class LumenJWTServiceProvider extends ServiceProvider
     protected function registerJwtAuthProvider()
     {
         $this->loadComponent(
-            [JWTInterface::class => 'tymon.jwt.provider.jwt'],
+            JWTInterface::class,
             'JWTAuthProvider'
         );
     }
@@ -346,7 +346,7 @@ class LumenJWTServiceProvider extends ServiceProvider
      * @param array  $bindings
      * @param string $name
      */
-    protected function loadComponent(array $bindings, $name)
+    protected function loadComponent($bindings, $name)
     {
         $this->app->singleton(
             $bindings,
