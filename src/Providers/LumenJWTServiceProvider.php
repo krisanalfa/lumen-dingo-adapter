@@ -4,6 +4,7 @@ namespace Zeek\LumenDingoAdapter\Providers;
 
 use JWTAuth;
 use JWTFactory;
+use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Auth\AuthManager;
@@ -44,6 +45,8 @@ class LumenJWTServiceProvider extends ServiceProvider
      */
     protected function registerJWTAuthDependency()
     {
+        $this->registerRequest();
+
         $this->registerRoutingAlias();
 
         $this->registerSessionServiceProvider();
@@ -53,6 +56,11 @@ class LumenJWTServiceProvider extends ServiceProvider
         $this->registerCacheServiceProvider();
 
         $this->registerAuthManagerAlias();
+    }
+    
+    protected function registerRequest()
+    {
+        $this->app->instance(Request::class, Request::capture());
     }
 
     /**
@@ -348,9 +356,19 @@ class LumenJWTServiceProvider extends ServiceProvider
      */
     protected function loadComponent($bindings, $name)
     {
-        $this->app->singleton(
-            $bindings,
-            $this->{"load{$name}Component"}()
-        );
+        $aliases = array_values($bindings);
+        $abstracts = array_keys($bindings);
+        
+        foreach ($abstracts as $index => $abstract) {
+            $this->app->singleton(
+                $abstract,
+                $this->{"load{$name}Component"}()
+            );
+            
+            $this->app->alias(
+                $abstract,
+                $aliases[$index]
+            );
+        }
     }
 }
