@@ -351,11 +351,19 @@ class LumenJWTServiceProvider extends ServiceProvider
     /**
      * Load component by given bindings an name resolver.
      *
-     * @param array  $bindings
+     * @param array|string  $bindings
      * @param string $name
      */
     protected function loadComponent($bindings, $name)
     {
+        if (is_string($bindings)) {
+            $this->app->singleton(
+                $bindings,
+                $this->{"load{$name}Component"}()
+            );
+            return;
+        }
+
         $aliases = array_values($bindings);
         $abstracts = array_keys($bindings);
         
