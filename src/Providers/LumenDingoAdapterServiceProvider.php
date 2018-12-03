@@ -14,6 +14,7 @@ class LumenDingoAdapterServiceProvider extends ServiceProvider
      */
     public function boot ()
     {
+
         $this->configure('auth');
         $this->configure('session');
     }
@@ -25,6 +26,14 @@ class LumenDingoAdapterServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
+        // Session provider
+        $this->registerCookieComponent();
+        $this->registerIlluminateSession();
+
+
+
+
         // JWTAuth
         $this->app->register(LumenJWTServiceProvider::class);
 
@@ -33,6 +42,29 @@ class LumenDingoAdapterServiceProvider extends ServiceProvider
 
         // Configure our JWT for Dingo
         $this->app->register(DingoJWTDriverServiceProvider::class);
+    }
+
+    /**
+     * Register the illuminate service provider if it is not registered.
+     *
+     * @return void
+     */
+    protected function registerIlluminateSession(){
+        if (!isset($this->app['session.store'])) {
+            if(!$this->app['config']->has('session.driver')) {
+                $this->app['config']->set('session.driver', 'file');
+            }
+            $this->app->register(\Illuminate\Session\SessionServiceProvider::class);
+        }
+    }
+    protected function registerCookieComponent()
+    {
+        $app = $this->app;
+        $this->app->singleton('cookie', function () use ($app) {
+            return $app->loadComponent('session', 'Illuminate\Cookie\CookieServiceProvider', 'cookie');
+        });
+
+        $this->app->bind('Illuminate\Contracts\Cookie\QueueingFactory', 'cookie');
     }
 
     /**

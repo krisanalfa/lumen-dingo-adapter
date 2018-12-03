@@ -18,7 +18,7 @@ use Tymon\JWTAuth\Middleware\RefreshToken;
 use Tymon\JWTAuth\Providers\JWT\JWTInterface;
 use Tymon\JWTAuth\Middleware\GetUserFromToken;
 use Illuminate\Session\SessionServiceProvider;
-use Tymon\JWTAuth\Providers\JWTAuthServiceProvider;
+use Tymon\JWTAuth\Providers\LumenServiceProvider;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuthFacade;
 use Tymon\JWTAuth\Facades\JWTFactory as JWTFactoryFacade;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
@@ -273,7 +273,7 @@ class LumenJWTServiceProvider extends ServiceProvider
         return function ($app) {
             return $app->loadComponent(
                 'jwt',
-                JWTAuthServiceProvider::class,
+                LumenServiceProvider::class,
                 TymonJWTAuth::class
             );
         };
@@ -289,7 +289,7 @@ class LumenJWTServiceProvider extends ServiceProvider
         return function ($app) {
             return $app->loadComponent(
                 'jwt',
-                JWTAuthServiceProvider::class,
+               LumenServiceProvider::class,
                 JWTInterface::class
             );
         };
@@ -351,20 +351,27 @@ class LumenJWTServiceProvider extends ServiceProvider
     /**
      * Load component by given bindings an name resolver.
      *
-     * @param array  $bindings
+     * @param array|string  $bindings
      * @param string $name
      */
     protected function loadComponent($bindings, $name)
     {
+        if (is_string($bindings)) {
+            $this->app->singleton(
+                $bindings,
+                $this->{"load{$name}Component"}()
+            );
+            return;
+        }
         $aliases = array_values($bindings);
         $abstracts = array_keys($bindings);
-        
+
         foreach ($abstracts as $index => $abstract) {
             $this->app->singleton(
                 $abstract,
                 $this->{"load{$name}Component"}()
             );
-            
+
             $this->app->alias(
                 $abstract,
                 $aliases[$index]
